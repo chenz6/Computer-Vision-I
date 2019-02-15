@@ -1,0 +1,66 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1671
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 output_onefour_kps='140keypoints.pt'\
+output_threefive_kps='35keypoints.pt'\
+\
+onefour = torch.load(output_onefour_kps)\
+threefive = torch.load(output_threefive_kps)\
+\
+print(threefive.shape)\
+print(onefour.shape)\
+\
+\
+S = torch.zeros(35, 140) \
+R = torch.zeros(30,30) #regualr\
+C = torch.zeros(30,30) # 0,1 matrix after threhold\
+\
+thredhold = 0.035\
+for a in range(35):      #Query[a]\
+    \
+    for b in range (140):       #Image[b]\
+        M = torch.zeros(30, 30) \
+        for c in range (30):    #threefiv in range(35)e[c]\
+          \
+            for d in range (30):  #onefour[d]\
+                \
+                M[c][d]=torch.dist(threefive[a][c],onefour[b][d])\
+         \
+        sim = torch.exp(-M)\
+        \
+        N = torch.norm(sim) #norm value\
+\
+        R = sim/N\
+\
+# print(sim.shape)\
+\
+# print(B.shape)\
+#print(B)\
+      \
+        Summation=0\
+        for i in range (30):\
+            for j in range(30):\
+                if R[i][j]>=thredhold:\
+#                     C[i][j]=1      # 0,1 matrix after threhold\
+#                     row_ind=i\
+#                     col_ind=j\
+#                     A=R[row_ind,col_ind]\
+                    Summation+=sim[i][j]\
+                    \
+#                 else:\
+#                     C[i][j]=0  \
+        #print(Summation)   \
+        S[a][b]=Summation.sum()\
+# print(R)\
+print(S)\
+\
+\
+\
+\
+\
+output_dir ='manytomany.pt'\
+torch.save(S,output_dir)}
