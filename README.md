@@ -20,3 +20,4 @@ In project 2
   ->Regular= sim/norm ==>[0,1]
   ->sum sim
 ->TN,TP,FN,FP
+
